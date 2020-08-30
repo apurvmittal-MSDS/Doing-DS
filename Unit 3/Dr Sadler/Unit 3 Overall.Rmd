@@ -161,8 +161,7 @@ str(df)
 
 summary(mpg$cyl)
 
-mpg %>%
-ggplot(aes(x = hwy, y = cty, color = cyl)) +
+mpg %>%ggplot(aes(x = hwy, y = cty, color = cyl)) +
 geom_point()
 
 mpg %>%
