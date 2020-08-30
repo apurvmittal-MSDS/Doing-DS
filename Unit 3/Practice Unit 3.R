@@ -46,3 +46,147 @@ mpg %>% mutate(displ_Factor = displ_Factor) %>% ggplot(aes(x = hwy, y = cty, col
 
 
 
+########## Missing Values##################
+
+#Fifa
+gg_miss_var(fifa[,1:40]) + ylim(0,75)
+
+gg_miss_var(fifa[,41:89]) + ylim(0,75)
+
+#mpg
+
+gg_miss_var(mpg) + ylim(0,10)
+
+sapply(mpg, function(x) sum(is.na(x)))
+
+#nycflights13
+library(nycflights13)
+gg_miss_var(flights)
+sapply(flights, function(x) sum(is.na(x)))
+
+##############################################
+
+## Adding Label or Data on the plots  ##
+
+total = count(mpg,class)
+total
+
+mpg%>%ggplot(aes(x=class, fill = class))+geom_bar()+ geom_text(data = total, aes(class,n+1, label=n))
+
+###############################
+
+
+#### MISSING VALUES ######
+
+a = read_csv("/Users/apurv/Documents/SMU/6306 - Doing Data Science/Unit - 3/Dr Sadler/MissingDataToy.csv")
+a
+str(a)
+# count missing values in each column
+s = sapply(a, function(x) sum(is.na(x)))
+s
+# Make all missing values NA
+str(a)
+a$chars[6] = NA
+str(a)
+a$chars = as.character(a$chars)
+str(a)
+
+### Provides a plot of number of missing values
+library(naniar)
+gg_miss_var(a)
+a
+# example
+#Fifa
+gg_miss_var(fifa[,1:40]) + ylim(0,75)
+
+gg_miss_var(fifa[,41:89]) + ylim(0,75)
+
+
+
+
+
+
+#### Diamonds Dataset###############
+
+diamonds
+str(diamonds)
+gg_miss_var(diamonds)
+d = sapply(diamonds, function(x) sum(is.na(x)))
+d
+diamonds%>%ggplot(aes(x=z))+geom_boxplot()
+
+diamonds$ztest=diamonds$z
+ztest
+is.na(diamonds$z)
+diamonds
+
+
+### Replacing values with NA if z<3 or>20#######
+diamonds_1 = diamonds %>% replace_with_na_at(.vars = c("z"), condition = ~.x <3)
+diamonds_1
+diamonds_2 = diamonds %>% replace_with_na_at(.vars = c("z"), condition = ~.x >20)
+diamonds_2
+gg_miss_var(diamonds_2[,1:11])
+summary(diamonds)
+dtest=sapply(diamonds_1,function(x) sum(is.na(x)))
+dtest
+
+
+diamondsz = cut(diamonds$z, breaks = c(0,4,32), labels = c("LOW","High"))
+diamondsz
+
+summary(diamondsz)
+#############################
+dev.off()
+diamonds
+diamonds %>%
+  select(price, carat, cut) %>%
+  ggpairs(mapping = aes(color = cut))
+
+diamonds %>% 
+  group_by(cut) %>% 
+  summarize(median = median(price))
+
+diamonds %>% 
+  group_by(cut) %>% 
+  summarize(median = median(carat))
+
+diamonds %>%
+  ggplot(aes(x = carat, y = price)) + 
+  geom_point()
+
+diamonds %>% 
+  mutate(lcarat = log(carat), lprice = log(price)) %>%
+  ggplot(aes(x = lcarat, y = lprice)) + 
+  geom_point()
+
+diamonds %>% 
+  mutate(lcarat = log(carat), lprice = log(price)) %>%
+  ggplot(aes(x = lcarat, y = lprice)) + 
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  ylim(c(5.5, 10))
+
+diamonds %>%
+  mutate(resids = exp(fit$residuals)) %>%
+  ggplot(aes(x = carat, y = resids)) + 
+  geom_point()
+
+diamonds %>%
+  mutate(resids = exp(fit$residuals)) %>%
+  ggplot(aes(x = carat, y = resids, color = cut)) + 
+  geom_point()
+
+diamonds %>% 
+  mutate(resids = exp(fit$residuals)) %>%
+  ggplot(aes(y = resids, color = cut)) +
+  geom_boxplot()
+
+diamonds %>% 
+  mutate(resids = exp(fit$residuals)) %>%
+  group_by(cut) %>% 
+  summarise(median = median(resids))
+
+
+
+
