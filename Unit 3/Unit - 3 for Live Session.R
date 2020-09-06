@@ -25,14 +25,14 @@ t.test(x = lm$Agility, y = lf$Agility, conf.int = .95, var.equal = TRUE, alterna
 
 ## Part -1 - Are the assumptions of this test reasonably met?  
 
-lm%>%ggplot(aes(x=Agility))+geom_histogram()
+lm%>%ggplot(aes(x=Agility))+geom_histogram()+ggtitle("Agility of Left Midfielders")
 
-lf%>%ggplot(aes(x=Agility))+geom_histogram()
+lf%>%ggplot(aes(x=Agility))+geom_histogram()+ggtitle("Agility of Left Forwards")
 
-qqnorm(lm$Agility)
+qqnorm(lm$Agility, main = "Left Midfielders QQ Plot")
 qqline(lm$Agility, col='red')
 
-qqnorm(lf$Agility)
+qqnorm(lf$Agility,main = "Left Forwards QQ Plot")
 qqline(lf$Agility, col='red')
 
 ggplot(data=fifa_lmlf,aes(y=Agility, color=Position))+geom_boxplot()
@@ -62,6 +62,7 @@ fifa%>%ggplot(aes(x=Penalties,y=SprintSpeed,fill=International.Reputation))+geom
 
 w1%>%ggplot(aes(x=Penalties,y=International.Reputation, color=Preferred.Foot))+geom_smooth()
 
-
+w1%>%ggplot((aes(x=Weight)))+geom_histogram()
+w1%>%ggplot((aes(x=Agility)))+geom_histogram()
 
 
