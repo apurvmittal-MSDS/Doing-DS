@@ -255,6 +255,7 @@ DallasTrends[1:10,]
 #search for reports with "gdp" in the description
 results = as.data.frame(WDIsearch("gdp"))
 
+
 #Many reports have more than 4 parts of the indicator
 # This is in contrast to this documentation: 
 #https://datahelpdesk.worldbank.org/knowledgebase/articles/201175-how-does-the-world-bank-code-its-indicators
