@@ -345,11 +345,13 @@ dfAuthors = data.frame(authors %>% str_match(author))
 names(dfAuthors) = c("Full","Dash","First","Last")
 dfAuthors
 dfAuthors %>% select(c(First,Last))
+
+
 ################################################################################
 ################################################################################
 ################################################################################
 ## Replacement
-```{r}
+
 roster = data.frame(Name = c("John", "Nancy", "Fred", "Sam", "Julie"), Gender = c("male", "F", "M", "Female", "female"), Major = c("?","Math","Comp Sci", "?", ""))
 str_replace(roster$Gender,"(male|M)", "Male")
 str_replace(roster$Gender,"(\\bmale\\b|\\bM\\b)", "Male")
@@ -357,33 +359,21 @@ roster$Gender = str_replace(roster$Gender,"(\\bmale\\b|\\bM\\b)", "Male")
 roster$Gender = str_replace(roster$Gender,"(\\bfemale\\b|\\bF\\b)", "Female")
 
 
+str_replace(roster$Major,"(\\?|)", "NA") ## This has error, its replacing all Null with NA
 
-
-
-#You Try Change all the ? marks and null spaces to "<NA>".
-#Don't look at the next line of code yet :)
-
-
-
-
-
-
-
-str_replace(roster$Major,"(\\?|)", "NA")
-
-roster$Major = str_replace(roster$Major,"(\\?)", "")
+roster$Major = str_replace(roster$Major,"(\\?)", "") ## Since ? is a regular expression, we need to escape it with \\ and replace with Null
 roster
 
 str(roster)
 
-roster$Gender = as.factor(roster$Gender)
-roster$Major = as.factor(roster$Major)
-levels(roster$Major) = droplevels(roster$Major,"")
+roster$Gender = as.factor(roster$Gender) # Converting to factor
+roster$Major = as.factor(roster$Major) # Converting to factor
+levels(roster$Major) = droplevels(roster$Major,"") # Dropping a factor level
 str(roster)
-```
+
 
 ##Split
-```{r}
+
 #Basic Demo of str split
 
 str_split("Muhatma_Gandhi, John_Wooden, Maya_Angelou" , "(_|,)")
@@ -401,7 +391,7 @@ Authors %>% separate(Author,into = c("First", "Last"), sep = "_")
 ```
 
 ##Split string into words
-```{r}
+
 s1 = sentences[1]
 str_split(s1," ")
 str_split(s1,"\\b")
@@ -411,10 +401,10 @@ unlist(str_split(s1,boundary("word")))
 s2 = "I like chocolate. It is my favorite."
 str_split(s2," ")
 str_split(s2,boundary("word"))
-```
+
 
 #regex()
-```{r}
+
 roster = data.frame(Name = c("John", "Nancy", "Fred", "Sam", "Julie", "Pat", "Mel", "Jay"), Gender = c("male", "F", "M", "Female", "femaLe","m","f","MaLe"), Major = c("NA","Math","Comp Sci", "NA", "NA", "NA", "English", "EE"))
 roster
 str(roster)
@@ -433,7 +423,7 @@ str(roster)
 roster[roster$Major=="NA",'Major'] <- NA
 roster
 
-```
+
 
 
 
@@ -441,7 +431,7 @@ roster
 
 #Example NYT
 
-```{r NYT}
+
 ######################
 
 # Loading the Data from the NYT API
