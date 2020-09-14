@@ -598,7 +598,7 @@ articleStats
 articleStats[,c(2,3)] %>% gather(Type,Percent) %>% mutate(Word = rep(articleStats$Word,2)) %>% ggplot(aes(y = Percent, x = Type, fill = Word)) + geom_col()
 
 articleStats[,c(2,3)] %>% gather(Type,Percent) %>% mutate(Word = rep(articleStats$Word,2)) %>% ggplot(aes(y = Percent, x = Type, fill = Word)) + geom_col() + facet_wrap(~Word)
-```
+
 
 
 
