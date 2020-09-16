@@ -386,7 +386,7 @@ unlist(str_split("Muhatma_Gandhi, John_Wooden, Maya_Angelou" , "(_|, )"))
 library(tidyr)
 Authors = data.frame(Author = c("Muhatma_Gandhi", "John_Wooden", "Maya_Angelou"))
 Authors %>% separate(Author,into = c("First", "Last"), sep = "_")
-```
+
 
 ##Split string into words
 
