@@ -1,0 +1,86 @@
+---
+title: "Unit-1 Assignment"
+author: "Apurv"
+date: "8/17/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+##############################################################################################
+
+Population=rchisq(10000000,2) #rchisq function to select a population of 10,000,000 and 2 SD
+summary(Population)
+###############################################################################################
+#histogram of the population
+hist(Population, xlab="Population", main="Histogram of Population")
+#Mean of ppopulation
+mean(Population)
+#Standard Deviation of Population
+sd(Population)
+```
+
+
+```{r}
+#Barchart of my profile in DS
+
+Category = c("Data Viz","Statistics","Mathematics","Domain Expertise", "Computer Science", "Communication", "Machine Learning" )
+Score = c(1,2,3,4,2,2,0)
+df=data.frame(Score, Category)
+barplot(df$Score,names.arg = df$Category, col = "blue", main = "My Data Science Profile", density = 60, ylab="Score", ylim = c(0,5) )
+#par(mfrow=c(1,2))
+dev.off()
+```
+
+
+```{r}
+# Simulator to Demonstrate CLT
+
+## Control Parameters
+
+sampleSize = 50 # sample size per sample 
+
+simulations = 10000 #number of samples and thus number of xbars we will generate.  
+
+## Data Holder
+
+xbar_holder = numeric(simulations) # This will hold all the sample mean.
+
+## Simulate and Store
+##Generate 10000 samples each of size 50 and find the mean of  sample.  Then store each mean in the xbar_holder vector.
+
+
+for (i in 1:simulations)
+{ 
+ 
+  theSample = sample(Population,sampleSize)
+  
+  xbar = mean(theSample)
+  
+  xbar_holder[i] = xbar
+  
+}
+
+
+## display the distribution of sample means (plot a histogram of the sample means)
+
+hist(xbar_holder, col = "grey", main = paste("Distribution of the sample mean: n = ", sampleSize), xlab = "Distribution of Sample Means")
+
+## summary statistics of the distribution of the simulated sample means. 
+
+summary(xbar_holder) #5 number summary and the mean
+mean(xbar_holder)
+sd(xbar_holder) # standard deviation 
+```
+
+```{r}
+###################################################################################
+#one sample t-test of Beach Combers Patrons
+age = c(25,19,37,29,40,28,31)
+t.test(x = age, conf.int = .95,  alternative = "two.sided", mu=21)
+```
