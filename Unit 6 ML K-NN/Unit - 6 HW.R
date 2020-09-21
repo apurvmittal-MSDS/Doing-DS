@@ -1,7 +1,89 @@
+############################################################
+############## Question 1 ##################################
+############################################################
+############################################################
+
+# library(RCurl)
+# library(jsonlite)
+# library(httr)
+# 
+# baseURL <- "https://public.opendatasoft.com/api/records/1.0/search/?dataset=titanic-passengers&rows=2000&facet=survived&facet=pclass&facet=sex&facet=age&facet=embarked"
+# 
+# 
+# get_data <- GET(baseURL)
+# 
+# get_text <- content(get_data, "text")
+# 
+# get_json <- jsonlite::fromJSON(get_text, flatten = TRUE)
+# 
+# get_df <- as.data.frame(get_json$name)
+# 
+# get_prices_df$date = as.Date(get_prices_df$date)
+
+# Read Training Data
+titanic_train = read.csv("/Users/apurv/Documents/SMU/6306 - Doing Data Science/Unit - 6/Dr Sadler/titanic_train.csv", header = TRUE)
+
+#Read Test Data
+titanic_test = read.csv("/Users/apurv/Documents/SMU/6306 - Doing Data Science/Unit - 6/Dr Sadler/titanic_test.csv", header = TRUE)
+
+titanic_train$Survived=as.factor(titanic_train$Survived)
+
+#Change the factor value for response variable
+
+titanic_train$Survived = factor(titanic_train$Survived,labels = c("Died","Survived"))
+
+AgeClassTrain=titanic_train%>%filter(!is.na(Age))
+classifications = knn.cv(AgeClassTrain[,c(3,6)],AgeClassTrain$Survived,k=15, prob = TRUE)
+confusionMatrix(table(AgeClassTrain$Survived,classifications))
+AgeClassTrain%>%ggplot(aes(x=Age, y=Pclass,color=Survived))+geom_point() + ylab("Class") +ggtitle("Survival Rate based on Age and Class - Train Data")
+
+
+# Standardizing
+dfZTrain = data.frame(zAge = scale(AgeClassTrain$Age), zClass = scale(AgeClassTrain$Pclass), Survived = AgeClassTrain$Survived)
+
+classifications = knn.cv(dfZTrain[,1:2],dfZTrain$Survived, k = 15)
+confusionMatrix(classifications,dfZTrain$Survived)
+
+dfZTrain%>%ggplot(aes(x=zAge, y=zClass,color=Survived))+geom_point() + ylab("Class")
+
+### Check KNN probability of survival bases on my Age and different classes
+myAgeClass1 = data.frame(Pclass = 1, Age = 38)
+myAgeClass2 = data.frame(Pclass = 2, Age = 38)
+myAgeClass3 = data.frame(Pclass = 3, Age = 38)
+
+# Age and Class 1
+
+knn(AgeClassTrain[,c(3,6)], myAgeClass1, AgeClassTrain$Survived,k=15, prob = TRUE)
+
+# Age and Class 2
+
+knn(AgeClassTrain[,c(3,6)], myAgeClass2, AgeClassTrain$Survived,k=15, prob = TRUE)
+
+# Age and Class 3
+
+knn(AgeClassTrain[,c(3,6)], myAgeClass3, AgeClassTrain$Survived,k=15, prob = TRUE)
+  
+
+#### Try the model against the Test Data set
+
+titanic_test = read.csv("/Users/apurv/Documents/SMU/6306 - Doing Data Science/Unit - 6/Dr Sadler/titanic_test.csv", header = TRUE)
+
+Train=titanic_train%>%filter(!is.na(Age))
+Test=titanic_test%>%filter(!is.na(Age))
+
+classifications = knn(Train[,c(3,6)],Test[,c(2,5)], AgeClassTrain$Survived,k=15, prob = TRUE)
+
+
+Test$Survived = classifications
+
+
+Test%>%ggplot(aes(x=Age, y=Pclass,color=Survived))+geom_point() + ylab("Class")+ggtitle("Survival Rate based on Age and Class - Test Data")
+
+
 
 
 ############################################################
-############## Question 2 .1################################
+############## Question 2 .1 ###############################
 ############################################################
 ############################################################
 
