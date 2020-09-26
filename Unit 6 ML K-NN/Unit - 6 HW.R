@@ -3,22 +3,21 @@
 ############################################################
 ############################################################
 
-# library(RCurl)
-# library(jsonlite)
-# library(httr)
-# 
-# baseURL <- "https://public.opendatasoft.com/api/records/1.0/search/?dataset=titanic-passengers&rows=2000&facet=survived&facet=pclass&facet=sex&facet=age&facet=embarked"
-# 
-# 
-# get_data <- GET(baseURL)
-# 
-# get_text <- content(get_data, "text")
-# 
-# get_json <- jsonlite::fromJSON(get_text, flatten = TRUE)
-# 
-# get_df <- as.data.frame(get_json$name)
-# 
-# get_prices_df$date = as.Date(get_prices_df$date)
+library(RCurl)
+library(jsonlite)
+library(httr)
+
+baseURL <- "https://public.opendatasoft.com/api/records/1.0/search/?dataset=titanic-passengers&rows=2000&facet=survived&facet=pclass&facet=sex&facet=age&facet=embarked"
+
+get_json <- getURL(baseURL)
+
+get_data = fromJSON(get_json)
+
+titanicDF <- get_data$records$fields
+
+head(titanicDF)
+
+
 
 # Read Training Data
 titanic_train = read.csv("/Users/apurv/Documents/SMU/6306 - Doing Data Science/Unit - 6/Dr Sadler/titanic_train.csv", header = TRUE)
@@ -68,6 +67,8 @@ knn(AgeClassTrain[,c(3,6)], myAgeClass3, AgeClassTrain$Survived,k=15, prob = TRU
 
 titanic_test = read.csv("/Users/apurv/Documents/SMU/6306 - Doing Data Science/Unit - 6/Dr Sadler/titanic_test.csv", header = TRUE)
 
+
+
 Train=titanic_train%>%filter(!is.na(Age))
 Test=titanic_test%>%filter(!is.na(Age))
 
@@ -79,7 +80,30 @@ Test$Survived = classifications
 
 Test%>%ggplot(aes(x=Age, y=Pclass,color=Survived))+geom_point() + ylab("Class")+ggtitle("Survival Rate based on Age and Class - Test Data")
 
+#############################################################################
+##################Try with splitting Train Data 70/30 #######################
+#############################################################################
 
+
+splitPerc = .70
+titanic_Data = read.csv("/Users/apurv/Documents/SMU/6306 - Doing Data Science/Unit - 6/Dr Sadler/titanic_train.csv", header = TRUE)
+
+trainIndices = sample(1:dim(titanic_Data)[1],round(splitPerc * dim(titanic_Data)[1])) # selecting the 70% of dataset for training.
+train1 = titanic_Data[trainIndices,]
+test1 = titanic_Data[-trainIndices,]
+trainF=train1%>%filter(!is.na(Age))
+testF=test1%>%filter(!is.na(Age))
+
+
+#Change the factor value for response variable
+
+trainF$Survived = factor(trainF$Survived,labels = c("Died","Survived"))
+testF$Survived = factor(testF$Survived,labels = c("Died","Survived"))
+
+classifications = knn(trainF[,c(3,6)],testF[,c(3,6)], trainF$Survived,k=15, prob = TRUE)
+
+table(classifications,testF$Survived)
+confusionMatrix(table(classifications,testF$Survived))
 
 
 ############################################################
